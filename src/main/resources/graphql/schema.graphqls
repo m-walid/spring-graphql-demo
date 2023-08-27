@@ -1,0 +1,47 @@
+scalar DateTime
+scalar Url
+
+type Query {
+    users: [User!]!
+    user(id: ID!): User!
+    posts: [Post!]!
+    post(id: ID!): Post!
+    comments: [Comment!]!
+    comment(id: ID!): Comment!
+}
+
+type User {
+    id: ID!
+    fullName: String!
+    email: String!
+    birthDate: String!
+    profileImage: Url
+    country: String!
+    gender: Gender!
+    joinDate: DateTime!
+    friends: [User!]!
+    posts: [Post!]!
+}
+
+type Post {
+    id: ID!
+    title: String!
+    content: String!
+    image: Url
+    createdAt: DateTime!
+    comments: [Comment!]!
+    user: User!
+}
+
+type Comment {
+    id: ID!
+    content: String!
+    createdAt: DateTime!
+    user: User!
+    post: Post!
+}
+
+enum Gender{
+    MALE,
+    FEMALE
+}
