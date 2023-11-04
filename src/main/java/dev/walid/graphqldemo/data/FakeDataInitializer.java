@@ -4,6 +4,7 @@ import dev.walid.graphqldemo.model.Comment;
 import dev.walid.graphqldemo.model.Gender;
 import dev.walid.graphqldemo.model.Post;
 import dev.walid.graphqldemo.model.User;
+import dev.walid.graphqldemo.repository.PostRepository;
 import dev.walid.graphqldemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import net.datafaker.Faker;
@@ -19,6 +20,7 @@ public class FakeDataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final Faker faker = new Faker();
     private final Random random = new Random();
+    private final PostRepository postRepository;
 
 
     @Override
@@ -40,12 +42,12 @@ public class FakeDataInitializer implements CommandLineRunner {
             users.add(user);
         }
 
-        // each user has 10 friends
+        // each user has 10 followers
         users.forEach(user -> {
             List<User> friends = new ArrayList<>(users);
             friends.remove(user);
             Collections.shuffle(friends);
-            user.setFriends(new HashSet<>(friends.subList(0, 10)));
+            user.setFollowers(new HashSet<>(friends.subList(0, 10)));
         });
 
         // create 10 posts for each user
@@ -54,9 +56,10 @@ public class FakeDataInitializer implements CommandLineRunner {
             for (int i = 0; i < 10; i++) {
                 Post post = Post.builder()
                         .title(faker.lorem().sentence())
-                        .content(faker.lorem().characters(100))
+                        .content(faker.lorem().paragraph(1))
                         .image(faker.internet().image())
                         .user(user)
+                        .createdAt(faker.date().past(50, TimeUnit.DAYS).toLocalDateTime())
                         .build();
                 posts.add(post);
             }
@@ -68,9 +71,9 @@ public class FakeDataInitializer implements CommandLineRunner {
             Set<Comment> comments = new HashSet<>();
             for (int i = 0; i < 10; i++) {
                 Comment comment = Comment.builder()
-                        .content(faker.lorem().characters(50))
+                        .content(faker.lorem().paragraph(1))
                         .post(post)
-                        .user(user)
+                        .user(users.get(random.nextInt(users.size())))
                         .build();
                 comments.add(comment);
 
