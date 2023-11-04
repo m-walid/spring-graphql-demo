@@ -1,14 +1,21 @@
-scalar DateTime
 scalar Url
+scalar LocalDateTime
 
 type Query {
-    users: [User!]!
+    users(paginationRequest: PaginationRequest!): PaginatedUsers!
     user(id: ID!): User!
-    posts: [Post!]!
+    posts(paginationRequest: PaginationRequest!): PaginatedPosts!
     post(id: ID!): Post!
-    comments: [Comment!]!
+    comments(paginationRequest: PaginationRequest!): PaginatedComments!
     comment(id: ID!): Comment!
 }
+
+type Mutation {
+    createPost(postInput: PostInput!): Post!
+}
+
+
+
 
 type User {
     id: ID!
@@ -18,9 +25,10 @@ type User {
     profileImage: Url
     country: String!
     gender: Gender!
-    joinDate: DateTime!
-    friends: [User!]!
-    posts: [Post!]!
+    createdAt: LocalDateTime!
+    followers(paginationRequest: PaginationRequest!): PaginatedUsers!
+    following(paginationRequest: PaginationRequest!): PaginatedUsers!
+    posts(paginationRequest: PaginationRequest!): PaginatedPosts!
 }
 
 type Post {
@@ -28,15 +36,15 @@ type Post {
     title: String!
     content: String!
     image: Url
-    createdAt: DateTime!
-    comments: [Comment!]!
+    createdAt: LocalDateTime!
+    comments(paginationRequest: PaginationRequest!): PaginatedComments!
     user: User!
 }
 
 type Comment {
     id: ID!
     content: String!
-    createdAt: DateTime!
+    createdAt: LocalDateTime!
     user: User!
     post: Post!
 }
@@ -44,4 +52,33 @@ type Comment {
 enum Gender{
     MALE,
     FEMALE
+}
+
+
+input PaginationRequest {
+    page: Int!
+    size: Int!
+}
+type PaginatedUsers {
+    data: [User!]!
+    totalPages: Int!
+    totalElements: Int!
+}
+
+type PaginatedPosts {
+    data: [Post!]!
+    totalPages: Int!
+    totalElements: Int!
+}
+type PaginatedComments {
+    data: [Comment!]!
+    totalPages: Int!
+    totalElements: Int!
+}
+
+input PostInput {
+    title: String!
+    content: String!
+    image: Url
+    userId: ID!
 }
