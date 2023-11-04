@@ -33,25 +33,33 @@ public class User {
     private LocalDateTime createdAt;
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "user_friends",
+    @JoinTable(name = "follow",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id"))
+            inverseJoinColumns = @JoinColumn(name = "follower_id"))
     @ToString.Exclude
-    private Set<User> friends = new HashSet<>();
+    private Set<User> followers = new HashSet<>();
+
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "follow",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ToString.Exclude
+    private Set<User> following = new HashSet<>();
     @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Post> posts = new HashSet<>();
 
 
-    public void addFriend(User user) {
-        this.friends.add(user);
-        user.getFriends().add(this);
+    public void follow(User user) {
+        this.following.add(user);
+        user.getFollowers().add(this);
     }
 
-    public void removeFriend(User user) {
-        this.friends.remove(user);
-        user.getFriends().remove(this);
+    public void removeFollow(User user) {
+        this.following.remove(user);
+        user.getFollowers().remove(this);
     }
 
     @Override
