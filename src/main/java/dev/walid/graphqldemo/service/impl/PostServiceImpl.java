@@ -3,7 +3,6 @@ package dev.walid.graphqldemo.service.impl;
 import dev.walid.graphqldemo.dto.PaginatedResponse;
 import dev.walid.graphqldemo.dto.PaginationRequest;
 import dev.walid.graphqldemo.dto.PostInput;
-import dev.walid.graphqldemo.dto.UserPost;
 import dev.walid.graphqldemo.model.Post;
 import dev.walid.graphqldemo.model.User;
 import dev.walid.graphqldemo.repository.PostRepository;
@@ -14,9 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -24,36 +21,6 @@ import java.util.Map;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
 
-    @Override
-    public Map<User, PaginatedResponse<List<Post>>> getPostsForUsers(List<User> users, PaginationRequest paginationRequest) {
-
-        Map<User, PaginatedResponse<List<Post>>> userPostsMap = new HashMap<>();
-
-        List<UserPost> allPostsForUsersPaginated = postRepository.findAllPostsForUsersPaginated(
-                users.stream().map(User::getId).toList(),
-                paginationRequest.getPage(),
-                paginationRequest.getSize()
-        );
-
-        allPostsForUsersPaginated.forEach(userPost -> {
-            Post post = UserPost.toPost(userPost);
-            PaginatedResponse<List<Post>> userPosts = userPostsMap.getOrDefault(post.getUser(), new PaginatedResponse<>());
-            userPosts.setTotalPages(
-                    (int) Math.ceil((double) userPost.getTotalUserPosts() / paginationRequest.getSize())
-            );
-            userPosts.setTotalElements(userPost.getTotalUserPosts());
-            if (userPosts.getData() == null) {
-                userPosts.setData(List.of());
-            }
-            userPosts.getData().add(post);
-            userPostsMap.put(post.getUser(), userPosts);
-
-        });
-
-        users.forEach(user -> userPostsMap.putIfAbsent(user, new PaginatedResponse<>(List.of(), 0, 0)));
-
-        return userPostsMap;
-    }
 
     @Override
     public PaginatedResponse<List<Post>> getAllPosts(PaginationRequest paginationRequest) {
