@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
+
     @Override
     public PaginatedResponse<List<Comment>> getPostComments(Post post, PaginationRequest paginationRequest) {
         PageRequest pageRequest = PageRequest.of(paginationRequest.getPage(), paginationRequest.getSize());

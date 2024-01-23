@@ -17,7 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByUserIn(List<User> users);
 
     @Query(
-            value= """
+            value = """
                     select *
                     from (
                         select *,

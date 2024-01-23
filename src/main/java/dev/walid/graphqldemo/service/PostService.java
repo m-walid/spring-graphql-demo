@@ -12,7 +12,7 @@ import java.util.Map;
 public interface PostService {
     Map<User, PaginatedResponse<List<Post>>> getPostsForUsers(List<User> users, PaginationRequest paginationRequest);
 
-    PaginatedResponse<List<Post> >getAllPosts(PaginationRequest paginationRequest);
+    PaginatedResponse<List<Post>> getAllPosts(PaginationRequest paginationRequest);
 
     PaginatedResponse<List<Post>> getAllPostsByUser(User user, PaginationRequest paginationRequest);
 

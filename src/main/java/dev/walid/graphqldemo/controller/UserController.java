@@ -5,7 +5,9 @@ import dev.walid.graphqldemo.dto.PaginationRequest;
 import dev.walid.graphqldemo.model.User;
 import dev.walid.graphqldemo.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.graphql.data.method.annotation.*;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -26,11 +28,12 @@ public class UserController {
     }
 
 
-    @SchemaMapping(typeName="User")
+    @SchemaMapping(typeName = "User")
     public PaginatedResponse<List<User>> followers(User user, @Argument PaginationRequest paginationRequest) {
         return userService.getUserFollowers(user, paginationRequest);
     }
-    @SchemaMapping(typeName="User")
+
+    @SchemaMapping(typeName = "User")
     public PaginatedResponse<List<User>> following(User user, @Argument PaginationRequest paginationRequest) {
         return userService.getUserFollowing(user, paginationRequest);
     }

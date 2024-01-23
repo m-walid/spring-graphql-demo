@@ -17,7 +17,7 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    @SchemaMapping(typeName="Post")
+    @SchemaMapping(typeName = "Post")
     public PaginatedResponse<List<Comment>> comments(Post post, @Argument PaginationRequest paginationRequest) {
         return commentService.getPostComments(post, paginationRequest);
     }
